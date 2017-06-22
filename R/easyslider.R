@@ -1,4 +1,6 @@
-#' Easy sliders for shiny.
+#' easyslider: Easy sliders for shiny.
+#'
+#' Quickly add UI components by aesthetic mapping
 #'
 #' This package was written because it was frustrating to
 #' add a slider in shiny, which typically required changing
@@ -6,9 +8,15 @@
 #' a \code{renderUI} in \code{server.R} and also wiring it
 #' up to a plot by using \code{input$thing}.
 #'
-#' @name easyslider
+#' Instead, we can build simple UIs more conviniently by
+#' generating the components from aesthetics. In your server
+#' function, pipe data through some filters, then generate
+#' plots and tables appropriately.
+#'
 #' @import shiny
-#' @import rlang
+#' @docType package
+#' @name easyslider
+#' @rdname easyslider
 #' @examples \dontrun{
 #'
 #' #ui.R
@@ -55,7 +63,6 @@
 #'     })
 #'
 #' })
-
 #'
 #'
 #' }
@@ -63,11 +70,13 @@ NULL
 
 tl <- new.env(parent = emptyenv())
 
+#' Easy slider functions
+#'
 #' @param df a data.frame
 #' @param aes an aesthic to map a column to the filter
 #' @return a reactive, filtered data.frame
 #' @export
-#' @rdname easyslider
+#' @rdname easyslider_functions
 sliderFilter <- function(df, aes, ...){
 
   input <- dynGet("input", NULL)
@@ -96,7 +105,7 @@ sliderFilter <- function(df, aes, ...){
 }
 
 #' @export
-#' @rdname easyslider
+#' @rdname easyslider_functions
 slider2Filter <- function(df, aes, ...){
 
 
@@ -125,9 +134,8 @@ slider2Filter <- function(df, aes, ...){
 
 }
 
-#'
 #' @export
-#' @rdname easyslider
+#' @rdname easyslider_functions
 dropdownFilter <- function(df, aes, ...){
 
   input <- dynGet("input", NULL)
@@ -157,6 +165,7 @@ dropdownFilter <- function(df, aes, ...){
 }
 
 #' @export
+#' @rdname easyslider_functions
 easySliderUIOutput <- function(){
   uiOutput("AES")
 }
