@@ -69,33 +69,31 @@
 NULL
 
 tl <- new.env(parent = emptyenv())
+# tl[['.aes']] <- c()
+
 
 #' Easy slider functions
 #'
 #' @param df a data.frame
 #' @param aes an aesthic to map a column to the filter
+#' @param label the label to use on the filter
 #' @return a reactive, filtered data.frame
 #' @export
 #' @rdname easyslider_functions
-sliderFilter <- function(df, aes, ...){
+sliderFilter <- function(df, aes, label, ...){
 
   input <- dynGet("input", NULL)
   output <- dynGet("output", NULL)
-
-
   df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
-
   aes <- as.character(aes$x)
+  if(missing(label)) label <- aes
 
-  tl[[aes]] <-  reactive({
-    df <- df_()
-    r <- c(min(df[[aes]]), max(df[[aes]]))
-    sliderInput(aes, aes, r[1], r[2], input[[aes]])
-  })
-
-  output[["AES"]] <- renderUI({
-      do.call(tagList, lapply(tl, do.call, list()))
+  render_aes_ui(output, aes, reactive({
+      df <- df_()
+      r <- c(min(df[[aes]]), max(df[[aes]]))
+      sliderInput(aes, label, r[1], r[2], input[[aes]])
     })
+  )
 
   reactive({
     df <- df_()
@@ -106,26 +104,21 @@ sliderFilter <- function(df, aes, ...){
 
 #' @export
 #' @rdname easyslider_functions
-slider2Filter <- function(df, aes, ...){
-
+slider2Filter <- function(df, aes, label, ...){
 
   input <- dynGet("input", NULL)
   output <- dynGet("output", NULL)
-
   df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
-
   aes <- as.character(aes$x)
+  if(missing(label)) label <- aes
 
-  tl[[aes]] <-  reactive({
-    df <- df_()
-    r <- c(min(df[[aes]]), max(df[[aes]]))
-    value <- if(is.null(input[[aes]])) r else input[[aes]]
-    sliderInput(aes, aes, r[1], r[2], value)
-  })
-
-  output[["AES"]] <- renderUI({
-      do.call(tagList, lapply(tl, do.call, list()))
+  render_aes_ui(output, aes, reactive({
+      df <- df_()
+      r <- c(min(df[[aes]]), max(df[[aes]]))
+      value <- if(is.null(input[[aes]])) r else input[[aes]]
+      sliderInput(aes, label, r[1], r[2], value)
     })
+  )
 
   reactive({
     df <- df_()
@@ -134,28 +127,23 @@ slider2Filter <- function(df, aes, ...){
 
 }
 
+#' @param sfn a function that returns the dropdown items you want to display, given the unique values
+#'     present in the column specified by the aesthetic (eg sort, sample, etc)
 #' @export
 #' @rdname easyslider_functions
-dropdownFilter <- function(df, aes, ...){
+dropdownFilter <- function(df, aes, label, ..., sfn=I){
 
   input <- dynGet("input", NULL)
   output <- dynGet("output", NULL)
-
-
   df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
-
   aes <- as.character(aes$x)
+  if(missing(label)) label <- aes
 
-
-  tl[[aes]] <-  reactive({
+  render_aes_ui(output, aes, reactive({
     df <- df_()
-    r <-unique(df[[aes]])
-    selectInput(aes, aes, r, input[[aes]])
-  })
-
-  output[["AES"]] <- renderUI({
-      do.call(tagList, lapply(tl, do.call, list()))
-    })
+    r <-sfn(unique(df[[aes]]))
+    selectInput(aes, label, r, input[[aes]])
+  }))
 
   reactive({
     df <- df_()
@@ -168,4 +156,20 @@ dropdownFilter <- function(df, aes, ...){
 #' @rdname easyslider_functions
 easySliderUIOutput <- function(){
   uiOutput("AES")
+}
+
+
+
+render_aes_ui <- function(output, aes, r) {
+
+  # this should preserve insertion order for us...
+  if(!aes %in% tl[['.aes']]) tl[['.aes']] <- c(tl[['.aes']], aes)
+
+  tl[[aes]] <- r
+
+  to_render <- mget(tl[['.aes']], tl)
+
+  output[["AES"]] <- renderUI({
+      do.call(tagList, lapply(to_render, do.call, list()))
+    })
 }

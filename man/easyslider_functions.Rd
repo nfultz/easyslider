@@ -7,11 +7,11 @@
 \alias{easySliderUIOutput}
 \title{Easy slider functions}
 \usage{
-sliderFilter(df, aes, ...)
+sliderFilter(df, aes, label, ...)
 
-slider2Filter(df, aes, ...)
+slider2Filter(df, aes, label, ...)
 
-dropdownFilter(df, aes, ...)
+dropdownFilter(df, aes, label, ..., sfn = I)
 
 easySliderUIOutput()
 }
@@ -19,6 +19,11 @@ easySliderUIOutput()
 \item{df}{a data.frame}
 
 \item{aes}{an aesthic to map a column to the filter}
+
+\item{label}{the label to use on the filter}
+
+\item{sfn}{a function that returns the dropdown items you want to display, given the unique values
+present in the column specified by the aesthetic (eg sort, sample, etc)}
 }
 \value{
 a reactive, filtered data.frame
