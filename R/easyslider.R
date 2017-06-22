@@ -2,15 +2,70 @@
 #'
 #' This package was written because it was frustrating to
 #' add a slider in shiny, which typically required changing
-#' code in three places.
+#' code in three places: the placeholder in \code{ui.R},
+#' a \code{renderUI} in \code{server.R} and also wiring it
+#' up to a plot by using \code{input$thing}.
 #'
 #' @name easyslider
 #' @import shiny
 #' @import rlang
+#' @examples \dontrun{
+#'
+#' #ui.R
+#'
+#' library(shiny)
+#'
+#'
+#' shinyUI(fluidPage(
+#'
+#'   # Application title
+#'   titlePanel("Easy Slider Diamond Demo"),
+#'
+#'   # Sidebar with easyslider controls
+#'   sidebarLayout(
+#'     sidebarPanel(
+#'       easySliderUIOutput()
+#'     ),
+#'
+#'     # Show a plot of the filtered data
+#'     mainPanel(
+#'       plotOutput("distPlot")
+#'     )
+#'   )
+#'
+#' ))
+#'
+#' #server.R
+#'
+#' require(dplyr)
+#' require(ggplot2)
+#'
+#' library(shiny)
+#' library(easyslider)
+#'
+#'
+#' shinyServer(function(input, output) {
+#'
+#'   df <- diamonds %>%
+#'     slider2Filter(aes(depth)) %>%
+#'     dropdownFilter(aes(clarity))
+#'
+#'   output$distPlot <- renderPlot({
+#'       df() %>% ggplot() + aes(x=carat, y=price, color=cut) + geom_point()
+#'     })
+#'
+#' })
+
+#'
+#'
+#' }
 NULL
 
 tl <- new.env(parent = emptyenv())
 
+#' @param df a data.frame
+#' @param aes an aesthic to map a column to the filter
+#' @return a reactive, filtered data.frame
 #' @export
 #' @rdname easyslider
 sliderFilter <- function(df, aes, ...){
@@ -99,4 +154,9 @@ dropdownFilter <- function(df, aes, ...){
     subset(df, df[[aes]] == input[[aes]])
   })
 
+}
+
+#' @export
+easySliderUIOutput <- function(){
+  uiOutput("AES")
 }
