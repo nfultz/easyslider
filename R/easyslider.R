@@ -13,7 +13,11 @@ tl <- new.env(parent = emptyenv())
 
 #' @export
 #' @rdname easyslider
-sliderFilter <- function(df, aes, ..., input, output, p=parent.frame()){
+sliderFilter <- function(df, aes, ...){
+
+  input <- dynGet("input", NULL)
+  output <- dynGet("output", NULL)
+
 
   df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
 
@@ -38,7 +42,11 @@ sliderFilter <- function(df, aes, ..., input, output, p=parent.frame()){
 
 #' @export
 #' @rdname easyslider
-slider2Filter <- function(df, aes, ..., input, output){
+slider2Filter <- function(df, aes, ...){
+
+
+  input <- dynGet("input", NULL)
+  output <- dynGet("output", NULL)
 
   df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
 
@@ -65,7 +73,11 @@ slider2Filter <- function(df, aes, ..., input, output){
 #'
 #' @export
 #' @rdname easyslider
-dropdownFilter <- function(df, aes, ..., input=input, output=output){
+dropdownFilter <- function(df, aes, ...){
+
+  input <- dynGet("input", NULL)
+  output <- dynGet("output", NULL)
+
 
   df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
 

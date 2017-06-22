@@ -7,11 +7,11 @@
 \alias{dropdownFilter}
 \title{Easy sliders for shiny.}
 \usage{
-sliderFilter(df, aes, ..., input, output, p = parent.frame())
+sliderFilter(df, aes, ...)
 
-slider2Filter(df, aes, ..., input, output)
+slider2Filter(df, aes, ...)
 
-dropdownFilter(df, aes, ..., input = input, output = output)
+dropdownFilter(df, aes, ...)
 }
 \description{
 This package was written because it was frustrating to
