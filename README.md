@@ -3,9 +3,9 @@
 Quickly add UI components by aesthetic mapping
 
   It can be frustrating to add a slider in shiny, which typically required changing
-code in three places: the placeholder in \code{ui.R},
-a \code{renderUI} in \code{server.R} and also wiring it
-up to a plot by using \code{input$thing}.
+code in three places: the uiOutput in `ui.R`,
+a `renderUI` in `server.R` and also wiring it
+up to a plot by reading from `input$thing`.
 
   Instead, we can build simple UIs more conviniently by
 generating the components from aesthetics. In your server
