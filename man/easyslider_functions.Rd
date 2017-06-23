@@ -11,7 +11,7 @@ sliderFilter(df, aes, label, ...)
 
 slider2Filter(df, aes, label, ...)
 
-dropdownFilter(df, aes, label, ..., sfn = I, passthrough = FALSE)
+dropdownFilter(df, aes, label, ..., sfn = I, all.levels = FALSE)
 
 easySliderUIOutput()
 }
@@ -24,6 +24,8 @@ easySliderUIOutput()
 
 \item{sfn}{a function that returns the dropdown items you want to display, given the unique values
 present in the column specified by the aesthetic (eg sort, sample, etc)}
+
+\item{all.levels}{Add an "(All Levels)" option.}
 }
 \value{
 a reactive, filtered data.frame

@@ -129,9 +129,10 @@ slider2Filter <- function(df, aes, label, ...){
 
 #' @param sfn a function that returns the dropdown items you want to display, given the unique values
 #'     present in the column specified by the aesthetic (eg sort, sample, etc)
+#' @param all.levels Add an "(All Levels)" option.
 #' @export
 #' @rdname easyslider_functions
-dropdownFilter <- function(df, aes, label, ..., sfn=I, passthrough=FALSE){
+dropdownFilter <- function(df, aes, label, ..., sfn=I, all.levels=FALSE){
 
   input <- dynGet("input", NULL)
   output <- dynGet("output", NULL)
@@ -139,18 +140,18 @@ dropdownFilter <- function(df, aes, label, ..., sfn=I, passthrough=FALSE){
   aes <- as.character(aes$x)
   if(missing(label)) label <- aes
 
-  PT = "(No Filter)"
+  AL = "(All Levels)"
 
   render_aes_ui(output, aes, reactive({
     df <- df_()
     r <-sfn(unique(df[[aes]]))
-    if(passthrough) r <- c(PT, r)
+    if(all.levels) r <- c(AL, r)
     selectInput(aes, label, r, input[[aes]])
   }))
 
   reactive({
     df <- df_()
-    if(passthrough && input[[aes]] == PT) df else
+    if(identical(input[[aes]], AL)) df else
     subset(df, df[[aes]] == input[[aes]])
   })
 
