@@ -11,7 +11,7 @@ sliderFilter(df, aes, label, ...)
 
 slider2Filter(df, aes, label, ...)
 
-dropdownFilter(df, aes, label, ..., sfn = I)
+dropdownFilter(df, aes, label, ..., sfn = I, passthrough = FALSE)
 
 easySliderUIOutput()
 }

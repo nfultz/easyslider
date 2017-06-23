@@ -131,7 +131,7 @@ slider2Filter <- function(df, aes, label, ...){
 #'     present in the column specified by the aesthetic (eg sort, sample, etc)
 #' @export
 #' @rdname easyslider_functions
-dropdownFilter <- function(df, aes, label, ..., sfn=I){
+dropdownFilter <- function(df, aes, label, ..., sfn=I, passthrough=FALSE){
 
   input <- dynGet("input", NULL)
   output <- dynGet("output", NULL)
@@ -139,14 +139,18 @@ dropdownFilter <- function(df, aes, label, ..., sfn=I){
   aes <- as.character(aes$x)
   if(missing(label)) label <- aes
 
+  PT = "(No Filter)"
+
   render_aes_ui(output, aes, reactive({
     df <- df_()
     r <-sfn(unique(df[[aes]]))
+    if(passthrough) r <- c(PT, r)
     selectInput(aes, label, r, input[[aes]])
   }))
 
   reactive({
     df <- df_()
+    if(passthrough && input[[aes]] == PT) df else
     subset(df, df[[aes]] == input[[aes]])
   })
 
