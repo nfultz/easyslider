@@ -56,7 +56,9 @@
 #'
 #'   df <- diamonds %>%
 #'     slider2Filter(aes(depth)) %>%
-#'     dropdownFilter(aes(clarity))
+#'     dropdownFilter(aes(clarity)) %>%
+#'     checkboxGroupFilter(aes(cut))
+#'     checkboxGroupFilter(aes(cut))
 #'
 #'   output$distPlot <- renderPlot({
 #'       df() %>% ggplot() + aes(x=carat, y=price, color=cut) + geom_point()
@@ -129,7 +131,6 @@ slider2Filter <- function(df, aes, label, ...){
 
 #' @param sfn a function that returns the dropdown items you want to display, given the unique values
 #'     present in the column specified by the aesthetic (eg sort, sample, etc)
-#' @param all.levels Add an "(All Levels)" option.
 #' @export
 #' @rdname easyslider_functions
 dropdownFilter <- function(df, aes, label, ..., sfn=I, all.levels=FALSE){
@@ -156,6 +157,35 @@ dropdownFilter <- function(df, aes, label, ..., sfn=I, all.levels=FALSE){
   })
 
 }
+
+#' @param sfn a function that returns the dropdown items you want to display, given the unique values
+#'     present in the column specified by the aesthetic (eg sort, sample, etc)
+#' @param all.levels Add an "(All Levels)" option.
+#' @export
+#' @rdname easyslider_functions
+checkboxGroupFilter <- function(df, aes, label, ..., sfn=I){
+  
+  input <- dynGet("input", NULL)
+  output <- dynGet("output", NULL)
+  df_ <- if(is.data.frame(df)) reactive(df) else if (is.reactive(df)) df
+  aes <- as.character(aes$x)
+  if(missing(label)) label <- aes
+  
+
+  render_aes_ui(output, aes, reactive({
+    df <- df_()
+    r <-sfn(unique(df[[aes]]))
+    checkboxGroupInput(aes, label, r, input[[aes]])
+  }))
+  
+  reactive({
+    df <- df_()
+    subset(df, df[[aes]] %in% input[[aes]])
+  })
+  
+}
+
+
 
 #' @export
 #' @rdname easyslider_functions

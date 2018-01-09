@@ -4,6 +4,7 @@
 \alias{sliderFilter}
 \alias{slider2Filter}
 \alias{dropdownFilter}
+\alias{checkboxGroupFilter}
 \alias{easySliderUIOutput}
 \title{Easy slider functions}
 \usage{
@@ -12,6 +13,8 @@ sliderFilter(df, aes, label, ...)
 slider2Filter(df, aes, label, ...)
 
 dropdownFilter(df, aes, label, ..., sfn = I, all.levels = FALSE)
+
+checkboxGroupFilter(df, aes, label, ..., sfn = I)
 
 easySliderUIOutput()
 }
@@ -26,6 +29,9 @@ easySliderUIOutput()
 present in the column specified by the aesthetic (eg sort, sample, etc)}
 
 \item{all.levels}{Add an "(All Levels)" option.}
+
+\item{sfn}{a function that returns the dropdown items you want to display, given the unique values
+present in the column specified by the aesthetic (eg sort, sample, etc)}
 }
 \value{
 a reactive, filtered data.frame

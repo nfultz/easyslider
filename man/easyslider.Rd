@@ -60,7 +60,9 @@ shinyServer(function(input, output) {
 
   df <- diamonds \%>\%
     slider2Filter(aes(depth)) \%>\%
-    dropdownFilter(aes(clarity))
+    dropdownFilter(aes(clarity)) \%>\%
+    checkboxGroupFilter(aes(cut))
+    checkboxGroupFilter(aes(cut))
 
   output$distPlot <- renderPlot({
       df() \%>\% ggplot() + aes(x=carat, y=price, color=cut) + geom_point()
